@@ -33,11 +33,16 @@ sink the rest.
 
 ## Install
 
+Not published to npm yet — install from source:
+
 ```bash
-npm install -g @printemps-tokyo/trendcat
-# or run once:
-npx @printemps-tokyo/trendcat
+git clone https://github.com/printemps-tokyo/trendcat
+cd trendcat
+npm install && npm run build
+npm link   # optional: puts the `trendcat` command on your PATH
 ```
+
+Then run `trendcat …` (after `npm link`), or `node dist/cli.js …` from the clone.
 
 ## Usage
 
