@@ -67,7 +67,7 @@ trendcat --format json -o trends.json
 | Id | Source | How it's fetched |
 | --- | --- | --- |
 | `hackernews` | Hacker News front page | Official Firebase API |
-| `reddit` | r/popular top of the day | Public `.json` (no auth) |
+| `reddit` | r/popular top of the day | Public Atom feed (no auth) |
 | `wikipedia` | Most-viewed articles (prev. day) | Wikimedia Pageviews REST API |
 | `hatena` | Hatena Bookmark hot entries (JP) | Public RSS |
 | `googlenews` | Google News top stories | Public RSS |
@@ -77,8 +77,9 @@ Japanese/Japan results; `--lang en` switches them to English/US. The other
 sources are global.
 
 If a source fails (network error, rate limit, ...), trendcat prints it as
-`_unavailable_` and still shows the rest. Reddit's unauthenticated endpoint in
-particular may return `403` from some networks; that is expected and handled
+`_unavailable_` and still shows the rest. Reddit blocks its `.json` API for
+non-browser clients, so trendcat reads Reddit's public Atom feed instead; that
+feed can still rate-limit (`HTTP 429`) under frequent use, which also degrades
 gracefully.
 
 ## Notes

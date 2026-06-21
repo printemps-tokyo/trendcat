@@ -38,4 +38,17 @@ describe("parseRss", () => {
     const rdf = `<rdf:RDF><item rdf:about="https://h/1"><title>Hot Entry</title><link>https://h/1</link></item></rdf:RDF>`;
     expect(parseRss(rdf)).toEqual([{ title: "Hot Entry", link: "https://h/1" }]);
   });
+
+  it("parses Atom entries with href-attribute links (Reddit feed)", () => {
+    const atom = `<feed xmlns="http://www.w3.org/2005/Atom">
+      <entry>
+        <title>A reddit post</title>
+        <link href="https://www.reddit.com/r/popular/comments/abc/a_reddit_post/" />
+        <id>t3_abc</id>
+      </entry>
+    </feed>`;
+    expect(parseRss(atom)).toEqual([
+      { title: "A reddit post", link: "https://www.reddit.com/r/popular/comments/abc/a_reddit_post/" },
+    ]);
+  });
 });

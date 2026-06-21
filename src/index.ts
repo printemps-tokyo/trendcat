@@ -15,7 +15,6 @@ export type { RssItem } from "./rss.js";
 
 export { ALL_SOURCES, selectSources, hackernews, reddit, wikipedia, hatena, googlenews } from "./sources/index.js";
 export { parseHnStory } from "./sources/hackernews.js";
-export { parseRedditListing } from "./sources/reddit.js";
 export { parseWikipediaTop, wikiProject, wikiDatePath } from "./sources/wikipedia.js";
 export { googleNewsUrl } from "./sources/googlenews.js";
 

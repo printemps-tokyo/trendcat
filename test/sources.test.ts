@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { parseHnStory } from "../src/sources/hackernews.js";
-import { parseRedditListing } from "../src/sources/reddit.js";
 import { parseWikipediaTop, wikiProject, wikiDatePath } from "../src/sources/wikipedia.js";
 import { googleNewsUrl } from "../src/sources/googlenews.js";
 import { selectSources, ALL_SOURCES } from "../src/sources/index.js";
@@ -16,25 +15,6 @@ describe("parseHnStory", () => {
     expect(parseHnStory({ title: "Ask HN", id: 42, score: 5 }, 2).url).toBe(
       "https://news.ycombinator.com/item?id=42",
     );
-  });
-});
-
-describe("parseRedditListing", () => {
-  it("builds full permalinks and ranks, honoring the limit", () => {
-    const listing = {
-      data: {
-        children: [
-          { data: { title: "One", permalink: "/r/x/1", score: 100 } },
-          { data: { title: "Two", url: "https://two", score: 50 } },
-          { data: { score: 0 } }, // no title -> skipped
-          { data: { title: "Three", permalink: "/r/x/3", score: 10 } },
-        ],
-      },
-    };
-    const items = parseRedditListing(listing, 2);
-    expect(items).toHaveLength(2);
-    expect(items[0]).toEqual({ rank: 1, title: "One", url: "https://www.reddit.com/r/x/1", score: 100 });
-    expect(items[1]?.url).toBe("https://two");
   });
 });
 

@@ -1,10 +1,12 @@
 /**
- * A minimal RSS / RDF item extractor.
+ * A minimal RSS / RDF / Atom item extractor.
  *
- * It is not a full XML parser: it pulls `<item>` blocks and reads their
- * `<title>` and `<link>`, which is all the feeds trendcat consumes (RSS 2.0
- * from Google News and RDF/RSS 1.0 from Hatena) actually need. Keeping it to a
- * pure string transform makes it trivial to unit test against fixtures.
+ * It is not a full XML parser: it pulls `<item>` (RSS) and `<entry>` (Atom)
+ * blocks and reads their `<title>` and link, which is all the feeds trendcat
+ * consumes (RSS 2.0 from Google News, RDF/RSS 1.0 from Hatena, and Atom from
+ * Reddit) actually need. RSS links are element text (`<link>url</link>`);
+ * Atom links are an attribute (`<link href="url"/>`). Keeping this a pure
+ * string transform makes it trivial to unit test against fixtures.
  */
 
 export interface RssItem {
@@ -12,9 +14,20 @@ export interface RssItem {
   link: string;
 }
 
-const ITEM_RE = /<item[\s>][\s\S]*?<\/item>/gi;
+const BLOCK_RE = /<(item|entry)[\s>][\s\S]*?<\/\1>/gi;
 const TITLE_RE = /<title[^>]*>([\s\S]*?)<\/title>/i;
-const LINK_RE = /<link[^>]*>([\s\S]*?)<\/link>/i;
+const LINK_TEXT_RE = /<link[^>]*>([\s\S]*?)<\/link>/i;
+const LINK_HREF_RE = /<link[^>]*\bhref="([^"]+)"/i;
+
+/** Read a link from an item/entry: RSS element text or Atom `href` attribute. */
+function extractLink(block: string): string {
+  const text = LINK_TEXT_RE.exec(block);
+  if (text && (text[1] as string).trim() !== "") {
+    return decodeXmlText(text[1] as string);
+  }
+  const href = LINK_HREF_RE.exec(block);
+  return href ? decodeXmlText(href[1] as string) : "";
+}
 
 /** Strip a CDATA wrapper and decode the handful of XML entities feeds use. */
 export function decodeXmlText(raw: string): string {
@@ -42,20 +55,18 @@ function codePoint(value: number): string {
 /** Extract up to `limit` items (title + link) from RSS or RDF feed text. */
 export function parseRss(xml: string, limit = Infinity): RssItem[] {
   const items: RssItem[] = [];
-  const blocks = xml.match(ITEM_RE) ?? [];
+  const blocks = xml.match(BLOCK_RE) ?? [];
   for (const block of blocks) {
     if (items.length >= limit) {
       break;
     }
     const titleMatch = TITLE_RE.exec(block);
-    const linkMatch = LINK_RE.exec(block);
     if (!titleMatch) {
       continue;
     }
     const title = decodeXmlText(titleMatch[1] as string);
-    const link = linkMatch ? decodeXmlText(linkMatch[1] as string) : "";
     if (title !== "") {
-      items.push({ title, link });
+      items.push({ title, link: extractLink(block) });
     }
   }
   return items;

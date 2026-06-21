@@ -1,42 +1,27 @@
 import type { FetchOptions, Source, TrendItem } from "../types.js";
-import { fetchJson } from "../http.js";
+import { fetchText } from "../http.js";
+import { parseRss } from "../rss.js";
 
-/** The slice of Reddit's listing JSON we read. */
-export interface RedditListing {
-  data?: {
-    children?: { data?: { title?: string; permalink?: string; url?: string; score?: number } }[];
-  };
-}
+// Reddit blocks its public `.json` API for unauthenticated/non-browser
+// clients (HTTP 403), but still serves the public Atom feed to a browser-like
+// User-Agent. The feed carries titles and links but no score.
+const REDDIT_UA =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
 
-/** Convert Reddit's top listing into normalized trend items (pure). */
-export function parseRedditListing(listing: RedditListing, limit: number): TrendItem[] {
-  const children = listing.data?.children ?? [];
-  const items: TrendItem[] = [];
-  for (const child of children) {
-    const post = child.data;
-    if (!post?.title) {
-      continue;
-    }
-    items.push({
-      rank: items.length + 1,
-      title: post.title,
-      url: post.permalink ? `https://www.reddit.com${post.permalink}` : post.url,
-      score: post.score,
-    });
-    if (items.length >= limit) {
-      break;
-    }
-  }
-  return items;
-}
-
-/** Reddit's top posts of the day from r/popular (no auth required). */
+/** Reddit's top posts of the day from r/popular, via the public Atom feed. */
 export const reddit: Source = {
   id: "reddit",
   label: "Reddit",
   async fetchTrends(opts: FetchOptions): Promise<TrendItem[]> {
-    const url = `https://www.reddit.com/r/popular/top.json?t=day&limit=${opts.limit}`;
-    const listing = await fetchJson<RedditListing>(url, opts.fetchFn ?? fetch);
-    return parseRedditListing(listing, opts.limit);
+    const xml = await fetchText(
+      "https://www.reddit.com/r/popular/top/.rss?t=day",
+      opts.fetchFn ?? fetch,
+      REDDIT_UA,
+    );
+    return parseRss(xml, opts.limit).map((item, i) => ({
+      rank: i + 1,
+      title: item.title,
+      url: item.link || undefined,
+    }));
   },
 };
