@@ -13,8 +13,19 @@ export type { TrendItem, FetchOptions, Source } from "./types.js";
 export { parseRss, decodeXmlText } from "./rss.js";
 export type { RssItem } from "./rss.js";
 
-export { ALL_SOURCES, selectSources, hackernews, reddit, wikipedia, hatena, googlenews } from "./sources/index.js";
+export {
+  ALL_SOURCES,
+  selectSources,
+  hackernews,
+  lobsters,
+  reddit,
+  wikipedia,
+  hatena,
+  googlenews,
+} from "./sources/index.js";
 export { parseHnStory } from "./sources/hackernews.js";
+export { parseLobstersStory } from "./sources/lobsters.js";
+export type { LobstersStory } from "./sources/lobsters.js";
 export { parseWikipediaTop, wikiProject, wikiDatePath } from "./sources/wikipedia.js";
 export { googleNewsUrl } from "./sources/googlenews.js";
 

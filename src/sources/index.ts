@@ -1,12 +1,13 @@
 import type { Source } from "../types.js";
 import { hackernews } from "./hackernews.js";
+import { lobsters } from "./lobsters.js";
 import { reddit } from "./reddit.js";
 import { wikipedia } from "./wikipedia.js";
 import { hatena } from "./hatena.js";
 import { googlenews } from "./googlenews.js";
 
 /** Every built-in source, in display order. */
-export const ALL_SOURCES: Source[] = [hackernews, reddit, wikipedia, hatena, googlenews];
+export const ALL_SOURCES: Source[] = [hackernews, lobsters, reddit, wikipedia, hatena, googlenews];
 
 /** Look up sources by id, preserving the given order and erroring on unknowns. */
 export function selectSources(ids: string[]): Source[] {
@@ -19,4 +20,4 @@ export function selectSources(ids: string[]): Source[] {
   });
 }
 
-export { hackernews, reddit, wikipedia, hatena, googlenews };
+export { hackernews, lobsters, reddit, wikipedia, hatena, googlenews };

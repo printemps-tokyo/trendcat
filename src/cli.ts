@@ -11,8 +11,9 @@ const HELP = `trendcat - aggregate what's trending now from public sources
 Usage:
   trendcat [options]
 
-Collects trending items from Hacker News, Reddit, Wikipedia (most-viewed),
-Hatena Bookmark, and Google News, and prints a Markdown or JSON digest. Each
+Collects trending items from Hacker News, Lobsters, Reddit, Wikipedia
+(most-viewed), Hatena Bookmark, and Google News, and prints a Markdown or
+JSON digest. Each
 source is fetched independently; if one fails, the others still appear.
 
 Options:

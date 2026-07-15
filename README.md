@@ -1,6 +1,6 @@
 # trendcat
 
-> Aggregate what's trending now from Hacker News, Reddit, Wikipedia, Hatena, and Google News. Zero-dependency CLI.
+> Aggregate what's trending now from Hacker News, Lobsters, Reddit, Wikipedia, Hatena, and Google News. Zero-dependency CLI.
 
 [![CI](https://github.com/printemps-tokyo/trendcat/actions/workflows/ci.yml/badge.svg)](https://github.com/printemps-tokyo/trendcat/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
@@ -68,6 +68,7 @@ trendcat --format json -o trends.json
 | Id | Source | How it's fetched |
 | --- | --- | --- |
 | `hackernews` | Hacker News front page | Official Firebase API |
+| `lobsters` | Lobsters hottest stories | Public JSON endpoint (no auth) |
 | `reddit` | r/popular top of the day | Public Atom feed (no auth) |
 | `wikipedia` | Most-viewed articles (prev. day) | Wikimedia Pageviews REST API |
 | `hatena` | Hatena Bookmark hot entries (JP) | Public RSS |
