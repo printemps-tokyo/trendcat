@@ -5,6 +5,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { ALL_SOURCES, selectSources } from "./sources/index.js";
 import { renderJson, renderMarkdown, type SourceResult } from "./render.js";
 import type { FetchOptions } from "./types.js";
+import { usageError } from "./usage.js";
 
 const HELP = `trendcat - aggregate what's trending now from public sources
 
@@ -69,7 +70,7 @@ async function main(): Promise<number> {
       },
     }).values;
   } catch (err) {
-    process.stderr.write(`error: ${(err as Error).message}\n`);
+    process.stderr.write(usageError(err, "trendcat"));
     return 1;
   }
 
