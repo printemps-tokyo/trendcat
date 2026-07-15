@@ -17,6 +17,7 @@ export const reddit: Source = {
       "https://www.reddit.com/r/popular/top/.rss?t=day",
       opts.fetchFn ?? fetch,
       REDDIT_UA,
+      opts.timeoutMs,
     );
     return parseRss(xml, opts.limit).map((item, i) => ({
       rank: i + 1,

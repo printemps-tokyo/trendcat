@@ -13,7 +13,7 @@ export const googlenews: Source = {
   id: "googlenews",
   label: "Google News",
   async fetchTrends(opts: FetchOptions): Promise<TrendItem[]> {
-    const xml = await fetchText(googleNewsUrl(opts.lang), opts.fetchFn ?? fetch);
+    const xml = await fetchText(googleNewsUrl(opts.lang), opts.fetchFn ?? fetch, undefined, opts.timeoutMs);
     return parseRss(xml, opts.limit).map((item, i) => ({
       rank: i + 1,
       title: item.title,

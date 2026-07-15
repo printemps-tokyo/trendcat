@@ -57,7 +57,7 @@ export const wikipedia: Source = {
       const path = wikiDatePath(new Date(Date.now() - offset * day));
       const url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/top/${project}/all-access/${path}`;
       try {
-        const data = await fetchJson<WikiTopResponse>(url, fetchFn);
+        const data = await fetchJson<WikiTopResponse>(url, fetchFn, undefined, opts.timeoutMs);
         return parseWikipediaTop(data, opts.limit);
       } catch {
         // Try the earlier day.

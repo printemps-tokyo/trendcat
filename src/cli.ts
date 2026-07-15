@@ -20,6 +20,7 @@ Options:
                     available: ${ALL_SOURCES.map((s) => s.id).join(", ")}
   --limit <n>       Max items per source (default: 10)
   --lang <ja|en>    Region/language for Wikipedia and Google News (default: ja)
+  --timeout <ms>    Per-request network timeout in milliseconds (default: 10000)
   --format <md|json>  Output format (default: md)
   -o, --output <file> Write to a file (default: stdout)
   -h, --help        Show this help
@@ -61,6 +62,7 @@ async function main(): Promise<number> {
         source: { type: "string" },
         limit: { type: "string" },
         lang: { type: "string" },
+        timeout: { type: "string" },
         format: { type: "string" },
         output: { type: "string", short: "o" },
       },
@@ -73,6 +75,11 @@ async function main(): Promise<number> {
   const limit = values.limit ? Number(values.limit) : 10;
   if (!Number.isInteger(limit) || limit < 1) {
     process.stderr.write(`error: --limit must be a positive integer\n`);
+    return 1;
+  }
+  const timeoutMs = values.timeout ? Number(values.timeout) : 10_000;
+  if (!Number.isInteger(timeoutMs) || timeoutMs < 1) {
+    process.stderr.write(`error: --timeout must be a positive integer (milliseconds)\n`);
     return 1;
   }
   const lang = values.lang ?? "ja";
@@ -90,7 +97,7 @@ async function main(): Promise<number> {
     return 1;
   }
 
-  const opts: FetchOptions = { limit, lang };
+  const opts: FetchOptions = { limit, lang, timeoutMs };
   const results: SourceResult[] = await Promise.all(
     sources.map(async (source): Promise<SourceResult> => {
       try {

@@ -27,10 +27,10 @@ export const hackernews: Source = {
   label: "Hacker News",
   async fetchTrends(opts: FetchOptions): Promise<TrendItem[]> {
     const fetchFn = opts.fetchFn ?? fetch;
-    const ids = await fetchJson<number[]>(`${API}/topstories.json`, fetchFn);
+    const ids = await fetchJson<number[]>(`${API}/topstories.json`, fetchFn, undefined, opts.timeoutMs);
     const top = ids.slice(0, opts.limit);
     const stories = await Promise.all(
-      top.map((id) => fetchJson<HnStory>(`${API}/item/${id}.json`, fetchFn)),
+      top.map((id) => fetchJson<HnStory>(`${API}/item/${id}.json`, fetchFn, undefined, opts.timeoutMs)),
     );
     return stories
       .filter((s): s is HnStory => Boolean(s && s.title))

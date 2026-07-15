@@ -59,6 +59,7 @@ trendcat --format json -o trends.json
 | `--source <list>` | Comma list of sources | all |
 | `--limit <n>` | Max items per source | `10` |
 | `--lang <ja\|en>` | Region/language for Wikipedia and Google News | `ja` |
+| `--timeout <ms>` | Per-request network timeout in milliseconds | `10000` |
 | `--format <md\|json>` | Output format | `md` |
 | `-o, --output <file>` | Write to a file | stdout |
 
@@ -76,8 +77,10 @@ trendcat --format json -o trends.json
 Japanese/Japan results; `--lang en` switches them to English/US. The other
 sources are global.
 
-If a source fails (network error, rate limit, ...), trendcat prints it as
-`_unavailable_` and still shows the rest. Reddit blocks its `.json` API for
+If a source fails (network error, rate limit, timeout, ...), trendcat prints
+it as `_unavailable_` and still shows the rest. Every request is aborted after
+`--timeout` milliseconds (10 seconds by default), so a stalled endpoint cannot
+hang the CLI. Reddit blocks its `.json` API for
 non-browser clients, so trendcat reads Reddit's public Atom feed instead; that
 feed can still rate-limit (`HTTP 429`) under frequent use, which also degrades
 gracefully.

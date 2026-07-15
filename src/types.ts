@@ -16,6 +16,8 @@ export interface FetchOptions {
   limit: number;
   /** Language / region hint ("ja" or "en") for the region-aware sources. */
   lang: string;
+  /** Per-request timeout in milliseconds (default: 10000). */
+  timeoutMs?: number;
   /** Injectable fetch, so the network can be stubbed in tests. */
   fetchFn?: typeof fetch;
 }

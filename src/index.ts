@@ -18,5 +18,7 @@ export { parseHnStory } from "./sources/hackernews.js";
 export { parseWikipediaTop, wikiProject, wikiDatePath } from "./sources/wikipedia.js";
 export { googleNewsUrl } from "./sources/googlenews.js";
 
+export { fetchText, fetchJson, USER_AGENT, DEFAULT_TIMEOUT_MS } from "./http.js";
+
 export { renderMarkdown, renderJson } from "./render.js";
 export type { SourceResult } from "./render.js";
