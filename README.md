@@ -29,7 +29,7 @@ sink the rest.
 
 ## Requirements
 
-- Node.js >= 20 (uses the built-in `fetch`)
+- Node.js >= 22 (uses the built-in `fetch`)
 
 ## Install
 
