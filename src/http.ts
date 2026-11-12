@@ -26,7 +26,7 @@ export async function fetchText(
     return await res.text();
   } catch (err) {
     if (err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")) {
-      throw new Error(`timed out after ${timeoutMs}ms for ${url}`);
+      throw new Error(`timed out after ${timeoutMs}ms for ${url}`, { cause: err });
     }
     throw err;
   }
